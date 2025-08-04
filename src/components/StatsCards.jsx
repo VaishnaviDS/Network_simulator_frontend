@@ -1,51 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
+import { fetchTrafficRate } from '../api';
 
-export const StatsCards = ({ stats }) => {
-  const { trafficRate, linkLoad = {}, queueStatus = {} } = stats;
+const StatsCards = () => {
+  const [rate, setRate] = useState(0);
+
+  useEffect(() => {
+    fetchTrafficRate().then(res => setRate(res.data.rate)).catch(err => console.error(err));
+  }, []);
 
   return (
-    <div style={{ marginTop: "2rem" }}>
-      <h3>Network Statistics</h3>
-
-      <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
-        {/* Traffic Rate */}
-        <div style={{ border: "1px solid #ccc", padding: "1rem", borderRadius: "8px" }}>
-          <h4>Traffic Rate</h4>
-          <p>{trafficRate ?? "N/A"} packets/sec</p>
-        </div>
-
-        {/* Link Load */}
-        <div style={{ border: "1px solid #ccc", padding: "1rem", borderRadius: "8px" }}>
-          <h4>Link Load</h4>
-          {Object.keys(linkLoad).length === 0 ? (
-            <p>No data</p>
-          ) : (
-            <ul>
-              {Object.entries(linkLoad).map(([link, load], index) => (
-                <li key={index}>
-                  {link}: {load} packets/sec
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {/* Queue Status */}
-        <div style={{ border: "1px solid #ccc", padding: "1rem", borderRadius: "8px" }}>
-          <h4>Queue Status</h4>
-          {Object.keys(queueStatus).length === 0 ? (
-            <p>No data</p>
-          ) : (
-            <ul>
-              {Object.entries(queueStatus).map(([nodeId, queueLength], index) => (
-                <li key={index}>
-                  Node {nodeId}: {queueLength} packets waiting
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="bg-blue-100 p-4 rounded shadow">Traffic Rate: {rate.toFixed(2)} packets/sec</div>
     </div>
   );
 };
+
+export default StatsCards;
