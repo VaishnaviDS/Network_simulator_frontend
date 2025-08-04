@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api', // adjust for your backend
+  baseURL: 'https://network-simulator-rq55.onrender.com//api', // adjust for your backend
 });
 
 export const fetchGraph = () => API.get('/graph');
